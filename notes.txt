@@ -1,0 +1,12 @@
+For the SSL certificate and key generation, I used the following command:
+
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout conf/ssl/nginx.key -out conf/ssl/nginx.crt
+
+Here is what each option means:
+
+-x509 → generates a self-signed certificate
+-nodes → no passphrase (so Nginx can start without needing a password)
+-days 365 → certificate is valid for 1 year
+-newkey rsa:2048 → generate a 2048-bit RSA key
+-keyout → specifies the output file for the private key
+-out → specifies the output file for the certificate
