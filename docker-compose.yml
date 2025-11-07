@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  db:
+    image: mariadb:10.5
+    env_file:
+      - ./secrets/.env.db
+    ports:
+      - 3306:3306
+    volumes:
+      - tmp:/var/lib/mysql
+
+volumes:
+  tmp:
