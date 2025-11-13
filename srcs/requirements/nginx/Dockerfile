@@ -9,7 +9,7 @@ COPY index.html /var/www/html
 
 COPY conf/ssl/ /etc/nginx/ssl/
 
-RUN chmod 664 /etc/nginx/ssl/nginx.crt /etc/nginx/ssl/nginx.key
+RUN chmod 777 /etc/nginx/ssl/nginx.crt /etc/nginx/ssl/nginx.key
 
 COPY conf/nginx.conf /etc/nginx/nginx.conf
 

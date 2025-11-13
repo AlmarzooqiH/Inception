@@ -1,10 +1,11 @@
-version: "3.9"
-
 services:
   db:
-    image: mariadb:10.5
+    container_name: mariadb
+    build:
+      context: ./srcs/requirements/mariadb
+      dockerfile: Dockerfile
     env_file:
-      - ./secrets/.env.db
+      - ./srcs/secrets/.env.db
     ports:
       - 3306:3306
     volumes:

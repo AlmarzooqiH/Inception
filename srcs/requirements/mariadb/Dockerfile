@@ -7,7 +7,10 @@ RUN apt update -y && apt upgrade -y && \
     apt autoclean -y && \
     apt autoremove -y
 
+COPY ./setup/hamalmar_mariadb_init.sh /usr/local/bin
+
+RUN chmod +x /usr/local/bin/hamalmar_mariadb_init.sh
 
 EXPOSE 3306
 
-CMD ["mariadbd"]
+CMD ["/usr/local/bin/hamalmar_mariadb_init.sh"]
