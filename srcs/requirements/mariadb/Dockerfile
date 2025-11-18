@@ -1,16 +1,15 @@
-FROM debian:11-slim
+FROM debian:bookworm
 
-#continue setup ya ana
+RUN apt update -y && apt full-upgrade -y && \
+    apt install -y mariadb-server mariadb-client && \
+    apt autoclean -y && apt autoremove -y
 
-RUN apt update -y && apt upgrade -y && \
-    apt install mariadb-server -y && \
-    apt autoclean -y && \
-    apt autoremove -y
+USER root
 
-COPY ./setup/hamalmar_mariadb_init.sh /usr/local/bin
+COPY ./conf/hamalmar_mariadb_init.sh /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/hamalmar_mariadb_init.sh
 
 EXPOSE 3306
 
-CMD ["/usr/local/bin/hamalmar_mariadb_init.sh"]
+ENTRYPOINT ["/usr/local/bin/hamalmar_mariadb_init.sh"]

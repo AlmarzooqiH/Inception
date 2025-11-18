@@ -1,15 +1,9 @@
 services:
-  db:
+  mariadb:
     container_name: mariadb
     build:
       context: ./srcs/requirements/mariadb
       dockerfile: Dockerfile
     env_file:
-      - ./srcs/secrets/.env.db
-    ports:
-      - 3306:3306
-    volumes:
-      - tmp:/var/lib/mysql
+      - ./srcs/secrets/.env
 
-volumes:
-  tmp:
