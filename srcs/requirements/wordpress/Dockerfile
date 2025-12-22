@@ -1,18 +1,20 @@
-FROM debian:11-slim
+FROM debian:bookworm
 
+RUN apt update && apt install -y \
+    curl mariadb-client sendmail \
+    php php-fpm php-mysql \
+    && mkdir -p /run/php
 
-RUN apt update -y && apt upgrade -y && \
-    apt install wget -y && \ 
-    apt autoclean -y && \
-    apt autoremove -y
+RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
+	chmod +x wp-cli.phar && \
+	mv wp-cli.phar /usr/local/bin/wp
 
-COPY init/init.sh .
+COPY ./conf/www.conf /etc/php/8.2/fpm/pool.d/
 
-RUN chmod +x init.sh
+COPY ./init/init.sh /usr/local/bin/
 
-RUN bash init.sh && rm -rf init.sh latest.tar.gz
+RUN chmod +x /usr/local/bin/init.sh && chmod 777 /usr/local/bin/wp
 
-EXPOSE 80
+EXPOSE 9000
 
-# Will change this comand later on, i kept it like this so i can keep the container running for testing.
-CMD ["tail", "-f", "/dev/null"]
+ENTRYPOINT ["/usr/local/bin/init.sh"]
