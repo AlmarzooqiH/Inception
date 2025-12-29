@@ -1,4 +1,16 @@
 services:
   mariadb:
     build:
+      context: ./requirements/mariadb/
+      dockerfile: Dockerfile
+    env_file: ./.env
+  wordpress:
+    build:
+      context: ./requirements/wordpress/
+      dockerfile: Dockerfile
+    env_file: ./.env
+    ports:
+      - 8080:9000 #This should be removed later on i just put it for testing since i still did not setup nginx
+
+
       

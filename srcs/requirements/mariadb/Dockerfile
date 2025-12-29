@@ -1,7 +1,7 @@
 FROM debian:bookworm
 
 RUN apt update -y && apt full-upgrade -y \
-    && apt install -y mariadb-server mariadb-client tree htop \
+    && apt install -y mariadb-server mariadb-client nano tree htop \
     && apt autoremove -y && apt autoclean -y
 
 USER root

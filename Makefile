@@ -13,4 +13,4 @@ restart:
 	docker compose up
 	cd ..
 
-.PHONY start stop restart
+.PHONY: start stop restart
