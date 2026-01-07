@@ -1,6 +1,7 @@
 FROM debian:bookworm
 
 RUN apt update -y \
+    && apt upgrade -y \
     && apt install -y \
         php8.2-fpm php8.2-mysql wget \
         mariadb-client nano tree \
