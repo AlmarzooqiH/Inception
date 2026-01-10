@@ -1,10 +1,10 @@
 FROM debian:bookworm
 
+USER root
+
 RUN apt update -y && apt upgrade -y \
     && apt install -y mariadb-server mariadb-client nano tree htop \
     && apt autoremove -y && apt autoclean -y
-
-USER root
 
 WORKDIR /hamalmar-init
 
