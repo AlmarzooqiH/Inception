@@ -21,7 +21,7 @@ fi
 if [ ! -d "/var/lib/mysql/${WORDPRESS_DB_NAME}" ]; then
     echo "Setting up WordPress database and users..."
 
-    cat > /tmp/init.sql <<EOF
+cat > /tmp/init.sql <<EOF
 FLUSH PRIVILEGES;
 
 -- Secure root account
@@ -36,19 +36,21 @@ FLUSH PRIVILEGES;
 CREATE DATABASE IF NOT EXISTS \`${WORDPRESS_DB_NAME}\`
 CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
--- Create WordPress DB user
-CREATE USER IF NOT EXISTS '${MARIADB_ADMIN_USER}'@'%' IDENTIFIED BY '${MARIADB_ADMIN_PASSWORD}';
-GRANT ALL PRIVILEGES ON \`${WORDPRESS_DB_NAME}\`.* TO '${MARIADB_ADMIN_USER}'@'%';
-
--- Create second WordPress user (must NOT contain "admin")
+-- Create admin-level WordPress DB user
 CREATE USER IF NOT EXISTS '${WORDPRESS_DB_ADMIN}'@'%' IDENTIFIED BY '${WORDPRESS_DB_PASSWORD}';
 GRANT ALL PRIVILEGES ON \`${WORDPRESS_DB_NAME}\`.* TO '${WORDPRESS_DB_ADMIN}'@'%';
+
+-- Create standard WordPress DB user
+CREATE USER IF NOT EXISTS '${WORDPRESS_DB_USER}'@'%' IDENTIFIED BY '${WORDPRESS_DB_PASSWORD}';
+GRANT ALL PRIVILEGES ON \`${WORDPRESS_DB_NAME}\`.* TO '${WORDPRESS_DB_USER}'@'%';
 
 FLUSH PRIVILEGES;
 EOF
 
-    mysqld --user=mysql --datadir=/var/lib/mysql --bootstrap < /tmp/init.sql
-    rm -f /tmp/init.sql
+# Run the init SQL
+mysqld --user=mysql --datadir=/var/lib/mysql --bootstrap < /tmp/init.sql
+rm -f /tmp/init.sql
+
 fi
 
 # Start MariaDB in foreground (PID 1)
