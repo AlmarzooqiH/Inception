@@ -22,9 +22,8 @@ RUN wget https://wordpress.org/latest.tar.gz \
 
 COPY . .
 
-RUN cat ./conf/www.conf > /etc/php/8.2/fpm/pool.d/www.conf \
-    && rm -rf ./conf/
-
 EXPOSE 9000
 
-ENTRYPOINT ["/usr/sbin/php-fpm8.2", "-F"]
+RUN chmod +x ./conf/hamalmar-init-wordpress.sh
+
+ENTRYPOINT ["./conf/hamalmar-init-wordpress.sh"]
