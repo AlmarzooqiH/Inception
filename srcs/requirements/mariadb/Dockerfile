@@ -13,6 +13,5 @@ COPY . .
 EXPOSE 3306
 
 RUN chmod +x ./conf/hamalmar_mariadb_init.sh
-# RUN tail -f
 
 ENTRYPOINT ["./conf/hamalmar_mariadb_init.sh"]
