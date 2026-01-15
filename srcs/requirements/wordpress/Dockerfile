@@ -4,26 +4,22 @@ USER root
 
 RUN apt update -y \
     && apt upgrade -y \
-    && apt install -y \
-        php8.2-fpm php8.2-mysql php8.2-xml php8.2-curl php8.2-gd \
-        php8.2-mbstring php8.2-zip php8.2-intl \
-        mariadb-client wget mariadb-client \
+    && apt install -y curl mariadb-client sendmail php8.2 php8.2-fpm php8.2-mysql nano \
+    && mkdir -p /run/php \
     && apt autoremove -y \
-    && apt autoclean -y
+    && apt autoclean -y \
+    && rm -rf /var/lib/apt/lists/*
 
+# Install WP-CLI
+RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+    && chmod +x wp-cli.phar \
+    && mv wp-cli.phar /usr/local/bin/wp
 
-
-WORKDIR /var/www/html
-
-RUN wget https://wordpress.org/latest.tar.gz \
-    && tar -xzf latest.tar.gz --strip-components=1 \
-    && rm latest.tar.gz \
-    && chown -R www-data:www-data /var/www/html
-
-COPY . .
+# Copy PHP-FPM config and WordPress init script
+COPY ./conf/www.conf /etc/php/8.2/fpm/pool.d/
+COPY ./conf/hamalmar-init-wordpress.sh /usr/local/bin/hamalmar-init-wordpress.sh
+RUN chmod +x /usr/local/bin/hamalmar-init-wordpress.sh
 
 EXPOSE 9000
 
-RUN chmod +x ./conf/hamalmar-init-wordpress.sh
-
-ENTRYPOINT ["./conf/hamalmar-init-wordpress.sh"]
+ENTRYPOINT ["/usr/local/bin/hamalmar-init-wordpress.sh"]

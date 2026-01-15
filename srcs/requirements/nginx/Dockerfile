@@ -16,10 +16,11 @@ RUN echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] \
 RUN apt -y update && apt install -y nginx
 
 # Copy only what we need
-COPY ./conf/nginx.conf /etc/nginx/nginx.conf
 COPY ./conf/cert.pem /etc/nginx/cert.pem
 COPY ./conf/key.pem /etc/nginx/key.pem
+COPY ./conf/hamalmar-nginx-init.sh /bin/
+RUN chmod +x /bin/hamalmar-nginx-init.sh
 
 EXPOSE 443
 
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["/bin/hamalmar-nginx-init.sh"]

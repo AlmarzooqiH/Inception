@@ -8,6 +8,8 @@ services:
     networks:
       - inception
     restart: on-failure
+    volumes:
+      - db-storage:/var/lib/mysql
   wordpress:
     build:
       context: ./requirements/wordpress/
@@ -19,6 +21,8 @@ services:
     depends_on:
       - mariadb
     restart: on-failure
+    volumes:
+      - wp-storage:/var/www/html
   nginx:
     build:
       context: ./requirements/nginx/
@@ -33,6 +37,23 @@ services:
     ports:
       - "8080:443"
     restart: on-failure
+    volumes:
+      - wp-storage:/var/www/html
+
+volumes:
+  db-storage:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/hamad/data/mariadb   # MariaDB volume in WSL
+
+  wp-storage:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/hamad/data/wordpress  # WordPress files volume in WSL
 
 networks:
   inception:
