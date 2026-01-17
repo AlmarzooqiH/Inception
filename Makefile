@@ -1,16 +1,9 @@
-start:
-	cd srcs
-	docker compose up
-	cd ..
-stop:
-	cd srcs
-	docker compose down
-	cd ..
+all:
+	docker compose -f srcs/docker-compose.yml up -d --build
 
-restart:
-	cd srcs
-	docker compose down
-	docker compose up
-	cd ..
+down:
+	docker compose -f srcs/docker-compose.yml down -v
 
-.PHONY: start stop restart
+restart: down all
+
+.PHONY: all down restart

@@ -1,19 +1,20 @@
 #!/usr/bin/env bash
 set -e
 
+# Making sure that the runtime directory exsist as well as the database directtory and chaing the ownership to mysql user.
 mkdir -p /run/mysqld /var/lib/mysql
 chown -R mysql:mysql /run/mysqld /var/lib/mysql
 
-# Listen on all interfaces
+# Using the (s)trean (ed)itor to modify the 50-server.cnf to make it instead of listening from localhost(127.0.0.1) to any address (0.0.0.0)
 sed -i 's/127.0.0.1/0.0.0.0/' /etc/mysql/mariadb.conf.d/50-server.cnf || true
 
-# Initialize system DB if missing
+# Installing mariadb tables if they dont exsist yet =:D
 if [ ! -d "/var/lib/mysql/mysql" ]; then
     echo "Initializing MariaDB system tables..."
     mysql_install_db --user=mysql --datadir=/var/lib/mysql --rpm
 fi
 
-# Create WordPress DB and users only once
+# Checking if the wordpress database exsist. If it does not exsist we create it as well as its users.
 if [ ! -d "/var/lib/mysql/${DATABASE}" ]; then
     echo "Setting up WordPress database and users..."
 
@@ -38,4 +39,5 @@ mysqld --user=mysql --datadir=/var/lib/mysql --bootstrap < /tmp/init.sql
 rm -f /tmp/init.sql
 fi
 
+# Running mariadb daemon.
 exec mysqld_safe --datadir=/var/lib/mysql

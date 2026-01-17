@@ -3,7 +3,7 @@ set -e
 
 DOC_ROOT="/var/www/html"
 
-# Generate nginx.conf dynamically using DOMAIN_NAME from the env
+# Generating nginx.conf dynamically with respect to the enviornment vairables.
 cat > /etc/nginx/nginx.conf <<EOF
 user www-data;
 worker_processes auto;
@@ -45,8 +45,8 @@ EOF
 
 echo "Nginx configuration generated successfully."
 
-# Ensure the document root exists
+# Creating the /var/www/html directory if it doesnt exsist
 mkdir -p ${DOC_ROOT}
 
-# Start Nginx in foreground
+# Start Nginx daemon
 exec nginx -g "daemon off;"

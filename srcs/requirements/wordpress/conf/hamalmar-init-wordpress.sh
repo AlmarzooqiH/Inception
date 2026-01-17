@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
+# Waiting for mariadb to start before running wordpress to prevent undefined behaviour.
 echo "Waiting for MariaDB to be ready ..."
 until mariadb -h "${WORDPRESS_DB_HOST}" -u"${WORDPRESS_DB_USER}" -p"${WORDPRESS_DB_PASSWORD}" "${DATABASE}" -e "SELECT 1;" >/dev/null 2>&1; do
     echo "MariaDB is unavailable - sleeping..."
@@ -8,19 +9,19 @@ until mariadb -h "${WORDPRESS_DB_HOST}" -u"${WORDPRESS_DB_USER}" -p"${WORDPRESS_
 done
 echo "MariaDB is up - continuing ..."
 
-# Ensure WordPress directory exists
+# Ensure WordPress directory exists and chaning ownership to wordpress user.
 mkdir -p /var/www/html
 chown -R www-data:www-data /var/www/html
 cd /var/www/html
 
 
-# Download WordPress core if missing
+# Downloading WP core if missing
 if [ ! -f "index.php" ]; then
     echo "Downloading WordPress core..."
     wp core download --allow-root --force
 fi
 
-# Create wp-config.php if missing
+# Generating the configuration if it does not exsist. This config will define how to connect to the database.
 if [ ! -f "wp-config.php" ]; then
     echo "Creating wp-config.php..."
     wp config create \
@@ -55,5 +56,5 @@ else
     echo "WordPress is already installed."
 fi
 
-# Start PHP-FPM in foreground
+# Starting php-fpm daemon.
 exec php-fpm8.2 -F
